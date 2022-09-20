@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nemesis.Aliens;
 
 namespace Nemesis;
 
@@ -15,22 +16,15 @@ public class Game
     private bool isSelfDestructionOn;
     private int selfDesctructionCounter = 7;
 
-    private List<AlienToken> aliensBag  = new();
+    private AlienTokenBag alienTokenBag;
 
-    public Game(IEnumerable<Player> players)
+    public Game(IEnumerable<Player> players, AlienTokenBag alienTokenBag)
     {
+        this.alienTokenBag = alienTokenBag;
         this.players = players.ToArray();
-        if (this.players.Count == 0 || this.players.Count > 5)
+        
+        if (this.players.Count is 0 or > 5)
             throw new ArgumentException($"Player count must be between 1 and 5");
-        
-        aliensBag.AddRange(new []
-        {
-            new AlienToken(AlienTokenType.Empty, 0),
-            new AlienToken(AlienTokenType.Truten, 1)
-            // todo
-        });
-        
-        aliensBag.AddRange(this.players.Select(x => new AlienToken(AlienTokenType.Truten, new Random().Next(2) + 1)));
     }
 
     public void Play()
@@ -126,27 +120,27 @@ public class Game
 
     private void TakeAlienTokenFromBag()
     {
-        var token = aliensBag[new Random().Next(aliensBag.Count)];
+        var token = alienTokenBag.TakeToken();
 
         switch (token.Type)
         {
-            case AlienTokenType.Lichinka:
-                aliensBag.Remove(token);
-                aliensBag.Add(new AlienToken(AlienTokenType.Truten, 2));
+            case AlienTokenType.Larva:
+                alienTokenBag.TryPutToken(AlienTokenType.Adult);
                 break;
-            case AlienTokenType.Polzyn:
-                aliensBag.Remove(token);
-                aliensBag.Add(new AlienToken(AlienTokenType.Hunter, 3));
+            case AlienTokenType.Creeper:
+                alienTokenBag.TryPutToken(AlienTokenType.Breeder);
                 break;
-            case AlienTokenType.Truten:
-            case AlienTokenType.Hunter:
+            case AlienTokenType.Adult:
+            case AlienTokenType.Breeder:
+                alienTokenBag.PutToken(token);
                 DoNoiseCheckForAllPlayers();
                 break;
             case AlienTokenType.Queen:
                 ProcessQueenToken(token);
                 break;
             case AlienTokenType.Empty:
-                aliensBag.Add(new AlienToken(AlienTokenType.Truten, 2));
+                alienTokenBag.TryPutToken(AlienTokenType.Adult);
+                alienTokenBag.PutToken(token);
                 break;
         }
     }
@@ -154,9 +148,9 @@ public class Game
     private void ProcessQueenToken(AlienToken token)
     {
         var nest = rooms.FirstOrDefault(); // todo where roomType = Nest;
-        if (nest.Creatures.OfType<Player>().Count() > 0)
+        if (nest.Creatures.OfType<Player>().Any())
         {
-            aliensBag.Remove(token);
+            alienTokenBag.PutToken(token);
             // todo spawn queen;
         }
         else
@@ -239,27 +233,5 @@ public class AlienAttackCard
     public bool IsAttacking(Alien alien)
     {
         throw new NotImplementedException();
-    }
-}
-
-public enum AlienTokenType
-{
-    Empty,
-    Lichinka,
-    Polzyn,
-    Truten,
-    Hunter,
-    Queen
-}
-
-public struct AlienToken
-{
-    public AlienTokenType Type { get; set; }
-    public int Attention { get; set; }
-
-    public AlienToken(AlienTokenType type, int attention)
-    {
-        Type = type;
-        Attention = attention;
     }
 }
