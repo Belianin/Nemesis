@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nemesis.Aliens;
+using Nemesis.Rooms;
 
 namespace Nemesis;
 
 public class Game
 {
-    private ICollection<Room> rooms;
+    private Dictionary<int, Room> rooms;
     private IReadOnlyList<Player> players;
     private bool isGameOver;
     
@@ -18,10 +19,11 @@ public class Game
 
     private AlienTokenBag alienTokenBag;
 
-    public Game(IEnumerable<Player> players, AlienTokenBag alienTokenBag)
+    public Game(IEnumerable<Player> players, AlienTokenBag alienTokenBag, Dictionary<int, Room> rooms)
     {
         this.alienTokenBag = alienTokenBag;
         this.players = players.ToArray();
+        this.rooms = rooms;
         
         if (this.players.Count is 0 or > 5)
             throw new ArgumentException($"Player count must be between 1 and 5");
@@ -79,11 +81,11 @@ public class Game
     {
         foreach (var room in rooms)
         {
-            var players = room.Creatures.OfType<Player>().ToArray();
+            var players = room.Value.Creatures.OfType<Player>().ToArray();
             if (players.Length == 0)
                 continue;
 
-            var aliens = room.Creatures.OfType<Alien>().ToArray();
+            var aliens = room.Value.Creatures.OfType<Alien>().ToArray();
             if (aliens.Length == 0)
                 continue;
 
@@ -103,9 +105,9 @@ public class Game
 
     private void DealDamageToAliensByFire()
     {
-        foreach (var room in rooms.Where(r => r.IsBurning))
+        foreach (var room in rooms.Where(r => r.Value.IsBurning))
         {
-            foreach (var alien in room.Creatures.OfType<Alien>())
+            foreach (var alien in room.Value.Creatures.OfType<Alien>())
             {
                 alien.TakeDamage(1);
             }
@@ -148,7 +150,7 @@ public class Game
     private void ProcessQueenToken(AlienToken token)
     {
         var nest = rooms.FirstOrDefault(); // todo where roomType = Nest;
-        if (nest.Creatures.OfType<Player>().Any())
+        if (nest.Value.Creatures.OfType<Player>().Any())
         {
             alienTokenBag.PutToken(token);
             // todo spawn queen;
@@ -175,28 +177,6 @@ public class Game
     {
         
     }
-}
-
-public class Room
-{
-    public IReadOnlyCollection<Corridor> Corridors { get; }
-    public IReadOnlyCollection<Creature> Creatures { get; }
-    public bool IsBroken { get; }
-    public bool IsBurning { get; }
-}
-
-public class Corridor
-{
-    public IReadOnlySet<int> Numbers { get; }
-    public DoorStatus DoorStatus { get; }
-    public bool HasNoise { get; }
-}
-
-public enum DoorStatus
-{
-    Open,
-    Closed,
-    Broken
 }
 
 public abstract class Creature
