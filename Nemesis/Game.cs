@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nemesis.Aliens;
+using Nemesis.Cards;
 using Nemesis.Rooms;
 
 namespace Nemesis;
@@ -19,12 +20,19 @@ public class Game
 
     private AlienTokenBag alienTokenBag;
 
-    public Game(IEnumerable<Player> players, AlienTokenBag alienTokenBag, Dictionary<int, Room> rooms)
+    private Deck<AttackCard> attackCards;
+
+    public Game(
+        IEnumerable<Player> players,
+        AlienTokenBag alienTokenBag,
+        Dictionary<int, Room> rooms,
+        Deck<AttackCard> attackCards)
     {
         this.alienTokenBag = alienTokenBag;
         this.players = players.ToArray();
         this.rooms = rooms;
-        
+        this.attackCards = attackCards;
+
         if (this.players.Count is 0 or > 5)
             throw new ArgumentException($"Player count must be between 1 and 5");
     }
@@ -93,11 +101,11 @@ public class Game
             {
                 var player = players.OrderBy(x => x.Сards.Count).First();
 
-                var alienAttackCard = new AlienAttackCard();
+                var alienAttackCard = attackCards.TakeCard();
                 
-                if (alienAttackCard.IsAttacking(alien))
+                if (alienAttackCard.IsAlienAttack(alien))
                 {
-                    player.TakeDamage(alienAttackCard.Damage);
+                    //player.TakeDamage(alienAttackCard.Damage);
                 }
             }
         }
@@ -126,22 +134,22 @@ public class Game
 
         switch (token.Type)
         {
-            case AlienTokenType.Larva:
-                alienTokenBag.TryPutToken(AlienTokenType.Adult);
+            case AlienType.Larva:
+                alienTokenBag.TryPutToken(AlienType.Adult);
                 break;
-            case AlienTokenType.Creeper:
-                alienTokenBag.TryPutToken(AlienTokenType.Breeder);
+            case AlienType.Creeper:
+                alienTokenBag.TryPutToken(AlienType.Breeder);
                 break;
-            case AlienTokenType.Adult:
-            case AlienTokenType.Breeder:
+            case AlienType.Adult:
+            case AlienType.Breeder:
                 alienTokenBag.PutToken(token);
                 DoNoiseCheckForAllPlayers();
                 break;
-            case AlienTokenType.Queen:
+            case AlienType.Queen:
                 ProcessQueenToken(token);
                 break;
-            case AlienTokenType.Empty:
-                alienTokenBag.TryPutToken(AlienTokenType.Adult);
+            case AlienType.Empty:
+                alienTokenBag.TryPutToken(AlienType.Adult);
                 alienTokenBag.PutToken(token);
                 break;
         }
@@ -204,14 +212,4 @@ public class Alien : Creature
 public class Card
 {
     
-}
-
-public class AlienAttackCard
-{
-    public int Damage { get; set; }
-
-    public bool IsAttacking(Alien alien)
-    {
-        throw new NotImplementedException();
-    }
 }

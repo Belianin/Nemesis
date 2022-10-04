@@ -56,10 +56,10 @@ public static class DefaultGameSetUp
     {
         var bag = GetEmptyAlienTokenBag();
         
-        bag.TryPutToken(AlienTokenType.Empty);
-        bag.TryPutTokens(AlienTokenType.Larva, 4);
-        bag.TryPutToken(AlienTokenType.Creeper);
-        bag.TryPutTokens(AlienTokenType.Adult, 3 + playersCount);
+        bag.TryPutToken(AlienType.Empty);
+        bag.TryPutTokens(AlienType.Larva, 4);
+        bag.TryPutToken(AlienType.Creeper);
+        bag.TryPutTokens(AlienType.Adult, 3 + playersCount);
 
         return bag;
     }
@@ -68,23 +68,23 @@ public static class DefaultGameSetUp
     {
         var tokens = new List<AlienToken>();
 
-        void AddTokens(AlienTokenType tokenType, int attention, int count)
+        void AddTokens(AlienType tokenType, int attention, int count)
         {
             tokens.AddRange(Enumerable.Repeat(new AlienToken(tokenType, attention), count));
         }
         
-        AddTokens(AlienTokenType.Larva, 1, 8);
-        AddTokens(AlienTokenType.Creeper, 1, 3);
-        AddTokens(AlienTokenType.Adult, 4, 3);
-        AddTokens(AlienTokenType.Adult, 2, 4);
-        AddTokens(AlienTokenType.Adult, 3, 5);
+        AddTokens(AlienType.Larva, 1, 8);
+        AddTokens(AlienType.Creeper, 1, 3);
+        AddTokens(AlienType.Adult, 4, 3);
+        AddTokens(AlienType.Adult, 2, 4);
+        AddTokens(AlienType.Adult, 3, 5);
         
         tokens.AddRange(new []
         {
-            new AlienToken(AlienTokenType.Empty, 1),
-            new AlienToken(AlienTokenType.Breeder, 3),
-            new AlienToken(AlienTokenType.Breeder, 4),
-            new AlienToken(AlienTokenType.Queen, 4)
+            new AlienToken(AlienType.Empty, 1),
+            new AlienToken(AlienType.Breeder, 3),
+            new AlienToken(AlienType.Breeder, 4),
+            new AlienToken(AlienType.Queen, 4)
         });
 
         return new AlienTokenBag(tokens);

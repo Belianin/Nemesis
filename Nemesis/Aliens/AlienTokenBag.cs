@@ -28,9 +28,9 @@ public class AlienTokenBag
         return tokenToTake;
     }
 
-    public void TryPutToken(AlienTokenType tokenType)
+    public void TryPutToken(AlienType type)
     {
-        if (!TryFindMatchingTokenInSupply(t => t.Type == tokenType, out var tokenToPut))
+        if (!TryFindMatchingTokenInSupply(t => t.Type == type, out var tokenToPut))
             return;
         
         tokensSupply.Remove(tokenToPut);

@@ -4,10 +4,10 @@ namespace Nemesis.Aliens;
 
 public struct AlienToken
 {
-    public AlienTokenType Type { get; set; }
+    public AlienType Type { get; set; }
     public int Attention { get; set; }
 
-    public AlienToken(AlienTokenType type, int attention)
+    public AlienToken(AlienType type, int attention)
     {
         Type = type;
         Attention = attention;

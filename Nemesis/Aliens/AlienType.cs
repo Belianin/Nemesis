@@ -1,6 +1,6 @@
 ﻿namespace Nemesis.Aliens;
 
-public enum AlienTokenType
+public enum AlienType
 {
     Empty,
     /// <summary>
