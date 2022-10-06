@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nemesis", "Nemesis\Nemesis.csproj", "{5E357E75-D174-47D9-88F0-9C224BE999D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nemesis.Api", "Nemesis.Api\Nemesis.Api.csproj", "{21B78A85-8454-4997-AD01-882D42FCCCE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{5E357E75-D174-47D9-88F0-9C224BE999D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E357E75-D174-47D9-88F0-9C224BE999D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E357E75-D174-47D9-88F0-9C224BE999D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B78A85-8454-4997-AD01-882D42FCCCE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B78A85-8454-4997-AD01-882D42FCCCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B78A85-8454-4997-AD01-882D42FCCCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B78A85-8454-4997-AD01-882D42FCCCE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
