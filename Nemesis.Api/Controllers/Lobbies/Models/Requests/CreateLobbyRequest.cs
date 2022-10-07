@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Nemesis.Api.Controllers.Models.Requests;
+namespace Nemesis.Api.Controllers.Lobbies.Models.Requests;
 
 public class CreateLobbyRequest
 {

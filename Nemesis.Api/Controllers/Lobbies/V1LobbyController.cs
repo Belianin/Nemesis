@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
-using Nemesis.Api.Controllers.Models.Requests;
+using Nemesis.Api.Controllers.Lobbies.Models.Requests;
 using Nemesis.Api.Lobbies;
 
-namespace Nemesis.Api.Controllers;
+namespace Nemesis.Api.Controllers.Lobbies;
 
 [ApiController]
 [Route("V1/lobbies")]
-public class LobbyController : ControllerBase
+public class V1LobbyController : ControllerBase
 {
     private readonly LobbyService lobbyService;
 
-    public LobbyController(LobbyService lobbyService)
+    public V1LobbyController(LobbyService lobbyService)
     {
         this.lobbyService = lobbyService;
     }
