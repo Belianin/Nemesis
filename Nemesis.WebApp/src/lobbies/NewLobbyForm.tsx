@@ -27,7 +27,6 @@ export const NewLobbyForm: React.FC = () => {
         {/*<Input disabled/>*/}
         {/*<p>Mode</p>*/}
         {/*<Select />*/}
-        <hr/>
         <button disabled={!isReady} onClick={handleCreate}>Create</button>
     </div>
 }

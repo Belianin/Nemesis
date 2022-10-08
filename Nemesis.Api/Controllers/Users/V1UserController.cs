@@ -21,23 +21,27 @@ public class V1UserController : ControllerBase
     }
 
     [HttpGet("me")]
+    [ProducesResponseType(typeof(UserResponse), 200)]
     public async Task<IActionResult> GetMe()
     {
         var authorizationHeader = HttpContext.Request.Headers.Authorization;
 
         if (authorizationHeader.Count != 1)
-            return Forbid();
+            return StatusCode(403);
 
         var sessionId = authorizationHeader.Single();
 
         var login = await sessionRepository.GetUserLoginAsync(sessionId);
 
         if (login == null)
-            return Forbid();
+            return StatusCode(403);
 
         var user = await userRepository.GetUserAsync(login);
 
-        return Ok(user);
+        return Ok(new UserResponse
+        {
+            Login = user.Login
+        });
     }
 
     [HttpPost("login")]
@@ -47,12 +51,12 @@ public class V1UserController : ControllerBase
         var user = await userRepository.GetUserAsync(request.Login);
 
         if (user == null)
-            return Forbid();
+            return StatusCode(403);
 
         var passwordHash = PasswordHasher.Hash(request.Password);
 
         if (user.PasswordHash != passwordHash)
-            return Forbid();
+            return StatusCode(403);
 
         var sessionId = await sessionRepository.CreateSessionAsync(user.Login);
 
@@ -67,7 +71,7 @@ public class V1UserController : ControllerBase
     {
         var existingUser = await userRepository.GetUserAsync(request.Login);
 
-        if (existingUser == null)
+        if (existingUser != null)
             return BadRequest();
 
         var passwordHash = PasswordHasher.Hash(request.Password);

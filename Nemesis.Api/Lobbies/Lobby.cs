@@ -5,6 +5,7 @@ public class Lobby
     public string Id { get; set; }
     public string Title { get; set; }
     public List<string> Players { get; set; }
+    public string Host { get; set; }
 
     public event EventHandler<LobbyEvent> OnEvent;
 

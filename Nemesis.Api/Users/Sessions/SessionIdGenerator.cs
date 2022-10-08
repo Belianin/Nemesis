@@ -4,6 +4,6 @@ public static class SessionIdGenerator
     {
         var guids = Enumerable.Repeat(1, 4).Select(_ => Guid.NewGuid().ToString());
 
-        return string.Join(" ", guids).Replace("-", "");
+        return string.Join("", guids).Replace("-", "");
     }
 }
