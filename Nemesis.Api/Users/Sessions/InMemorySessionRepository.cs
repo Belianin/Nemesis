@@ -3,7 +3,13 @@ using Nemesis.Api.Users.Sessions;
 
 public class InMemorySessionRepository : ISessionRepository
 {
-    private readonly Dictionary<string, string> sessionToLogin = new();
+    private readonly ILogger<InMemorySessionRepository> logger;
+    public readonly Dictionary<string, string> sessionToLogin = new();
+
+    public InMemorySessionRepository(ILogger<InMemorySessionRepository> logger)
+    {
+        this.logger = logger;
+    }
     
     public Task<string> CreateSessionAsync(string login)
     {

@@ -2,7 +2,9 @@ import {get, post} from "./apiUtiles";
 
 export interface Lobby {
     id: string,
-    title: string
+    title: string,
+    playersCount: number,
+    host: string
 }
 
 const baseUrl = `${process.env.REACT_APP_API_URL}v1/lobbies`

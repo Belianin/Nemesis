@@ -1,15 +1,18 @@
-﻿namespace Nemesis.Api.Lobbies;
+﻿using System.Runtime.CompilerServices;
+
+namespace Nemesis.Api.Lobbies;
 
 public class LobbyService
 {
     private Dictionary<string, Lobby> lobbies = new();
 
-    public Lobby Create(string title)
+    public Lobby Create(string title, string host)
     {
         var lobby = new Lobby
         {
             Title = title,
-            Id = GameIdGenerator.GenerateId()
+            Id = GameIdGenerator.GenerateId(),
+            Host = host
         };
         
         lobbies[lobby.Id] = (lobby);
@@ -17,13 +20,13 @@ public class LobbyService
         return lobby;
     }
 
+    public Lobby GetLobby(string id)
+    {
+        return lobbies[id];
+    }
+
     public ICollection<Lobby> GetLobbies()
     {
         return lobbies.Values;
-    }
-
-    public void AddPlayer(string lobbyId, string player)
-    {
-        lobbies[lobbyId].AddPlayer(player);
     }
 }

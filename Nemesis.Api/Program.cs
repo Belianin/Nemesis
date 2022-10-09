@@ -1,3 +1,4 @@
+using Nemesis.Api.Auth;
 using Nemesis.Api.Lobbies;
 using Nemesis.Api.Users;
 using Nemesis.Api.Users.Sessions;
@@ -21,23 +22,38 @@ try
     builder.Services.AddControllers();
     builder.Logging.ClearProviders();
     builder.Logging.AddSerilog();
+    builder.Services.AddAuthentication(opt =>
+    {
+        opt.DefaultScheme = AuthConsts.Scheme;
+    }).AddScheme<SidAuthenticationSchemeOptions, SidAuthenticationHandler>(AuthConsts.Scheme, opt => {});
 
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
     {
+    }
         app.UseCors(x => x
             .WithOrigins("http://localhost:3000")
             .AllowCredentials()
             .AllowAnyMethod()
             .AllowAnyHeader());
-    }
 
     //app.UseSerilogRequestLogging();
-    app.MapControllers();
-    app.UseWebSockets();
     app.UseStaticFiles();
-    app.UseDefaultFiles();
+    app.UseHttpLogging();
+    app.UseDeveloperExceptionPage();
+    app.UseRouting();
+
+    app.UseWebSockets();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+        endpoints.MapFallbackToFile("index.html");
+    });
 
     app.Run();
     return 0;
