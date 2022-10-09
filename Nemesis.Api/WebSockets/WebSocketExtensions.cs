@@ -32,12 +32,15 @@ public class WebSocketListener<T>
         var buffer = new ArraySegment<byte>(new byte[4096]);
         WebSocketReceiveResult result = null;
 
-        while(!cancellationToken.IsCancellationRequested)
+        while(!cancellationToken.IsCancellationRequested && socket.CloseStatus != WebSocketCloseStatus.Empty)
         {
             var memoryStream = new MemoryStream();
             do
             {
                 result = await socket.ReceiveAsync(buffer, cancellationToken).ConfigureAwait(false);
+                if (result.MessageType == WebSocketMessageType.Close)
+                    goto x;
+
                 if (result.Count > 0)
                 {
                     memoryStream.Write(buffer.Array, buffer.Offset, result.Count);
@@ -52,5 +55,6 @@ public class WebSocketListener<T>
             memoryStream.Position = 0;
             OnMessage?.Invoke(this, JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(memoryStream.ToArray()), jsonOptions));
         }
+        x:;
     }
 }

@@ -21,20 +21,20 @@ export const LobbyPage: React.FC = () => {
         socket.current = new WebSocket(`ws://localhost:5000/v1/lobbies/${id}/connect?sid=${localStorage.getItem("sid")}`);
         socket.current.onmessage = handleMessage
 
-        const current = socket.current;
+        
 
-        //return () => current.close()
+        return () => {
+            if (socket.current !== null)
+                socket.current.close();
+        }
     }, [id])
 
     function handleMessage(e: MessageEvent<any>) {
-        console.log(e.data);
 
-        if (typeof e.data === 'string') {
-            const data = JSON.parse(e.data);
+        const data = JSON.parse(e.data);
 
-            if (data.type === "Message") {
-                setMessages(prev => [...prev, {author: data.author, message: data.message}])
-            }
+        if (data.type === "Message") {
+            setMessages(prev => [...prev, {author: data.author, message: data.message}])
         }
     }
 

@@ -68,6 +68,6 @@ public class V1LobbyController : ControllerBase
         
         await listener.ListenAsync(token);
 
-        //lobby.RemovePlayer(login);
+        lobby.RemovePlayer(login);
     }
 }
